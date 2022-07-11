@@ -119,6 +119,13 @@ app.get('/', function (request, response) {
 //movies
 app.get('/movies', async function (request, response) {
   //db.movies.find({})
+
+  if (request.query.rating) {
+    request.query.rating = +request.query.rating;
+  }
+  //request is object
+  console.log(request.query);
+
   //find doesn't return array. it returns curson. curson is called pagination
   //find will give u 1st 20 results but here we want all data single time.check compass / command-type mongo, use guvi-db,use find command
   //convert cursor to array with toArray()
@@ -128,9 +135,9 @@ app.get('/movies', async function (request, response) {
   const movies = await client
     .db('guvi-db')
     .collection('movies')
-    .find({})
+    .find(request.query) //mongodb filter
     .toArray();
-  console.log('Movies', movies);
+  // console.log('Movies', movies);
   response.send(movies);
 });
 
@@ -169,6 +176,47 @@ app.get('/movies/:id', async function (request, response) {
   movie
     ? response.send(movie)
     : response.status(404).send({ msg: 'movie not found' });
+});
+
+//delete operation
+
+app.delete('/movies/:id', async function (request, response) {
+  //params is object--param:{id:"104"}
+  const { id } = request.params;
+  console.log(request.param, id);
+  //query for particular movie alone from db
+  //db.movies.deleteOne({id:101})
+
+  const result = await client
+    .db('guvi-db')
+    .collection('movies')
+    // .deleteOne({ id: '101' });
+    .deleteOne({ id: id });
+  console.log(result);
+  //we use await bcoz it will take time ti go and get data. app crashes if async not use for function. put async on line 134
+  result.deletedCount > 0
+    ? // ? response.send(result)
+      response.send({ msg: 'Movie deleted successfully' })
+    : response.status(404).send({ msg: 'movie not found' });
+});
+
+//update operation
+app.put('/movies/:id', async function (request, response) {
+  console.log(request.params);
+  //params is object--param:{id:"104"}
+  const { id } = request.params;
+  console.log(request.param, id);
+  const data = request.body;
+
+  //query for particular movie alone from db
+  //db.movies.updateOne({id:101},{$set:data})
+
+  const result = await client
+    .db('guvi-db')
+    .collection('movies')
+    .updateOne({ id: id }, { $set: data });
+  response.send(result);
+  console.log(result);
 });
 
 //creating data-creating api
