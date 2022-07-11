@@ -20,11 +20,7 @@ router.get('/', async function (request, response) {
 
   //So, now i dont need data i.e. const movies=[] locally as it is comming from mongodb
 
-  const movies = await client
-    .db('guvi-db')
-    .collection('movies')
-    .find(request.query) //mongodb filter
-    .toArray();
+  const movies = await getAllMovies(request);
   // console.log('Movies', movies);
   response.send(movies);
 });
@@ -54,11 +50,7 @@ router.get('/:id', async function (request, response) {
   //query for particular movie alone from db
   //db.movies.findOne({id:101})
 
-  const movie = await client
-    .db('guvi-db')
-    .collection('movies')
-    // .findOne({ id: '101' });
-    .findOne({ id: id });
+  const movie = await getMovieById(id);
   console.log(movie);
   //we use await bcoz it will take time ti go and get data. app crashes if async not use for function. put async on line 134
   movie
@@ -75,11 +67,7 @@ router.delete('/:id', async function (request, response) {
   //query for particular movie alone from db
   //db.movies.deleteOne({id:101})
 
-  const result = await client
-    .db('guvi-db')
-    .collection('movies')
-    // .deleteOne({ id: '101' });
-    .deleteOne({ id: id });
+  const result = await deleteMovieById(id);
   console.log(result);
   //we use await bcoz it will take time ti go and get data. app crashes if async not use for function. put async on line 134
   result.deletedCount > 0
@@ -99,10 +87,7 @@ router.put('/:id', async function (request, response) {
   //query for particular movie alone from db
   //db.movies.updateOne({id:101},{$set:data})
 
-  const result = await client
-    .db('guvi-db')
-    .collection('movies')
-    .updateOne({ id: id }, { $set: data });
+  const result = await updateMovieById(id, data);
   response.send(result);
   console.log(result);
 });
@@ -122,11 +107,42 @@ router.post('/', async function (request, response) {
   //db.movies.insertMany(data)
 
   //now u have to write same query such that node understands it
-  const result = await client
-    .db('guvi-db')
-    .collection('movies')
-    .insertMany(data);
+  const result = await createMovies(data);
   response.send(result);
 });
 
 export const moviesRouter = router;
+async function createMovies(data) {
+  return await client.db('guvi-db').collection('movies').insertMany(data);
+}
+
+async function updateMovieById(id, data) {
+  return await client
+    .db('guvi-db')
+    .collection('movies')
+    .updateOne({ id: id }, { $set: data });
+}
+
+async function deleteMovieById(id) {
+  return await client
+    .db('guvi-db')
+    .collection('movies')
+    // .deleteOne({ id: '101' });
+    .deleteOne({ id: id });
+}
+
+async function getMovieById(id) {
+  return await client
+    .db('guvi-db')
+    .collection('movies')
+    // .findOne({ id: '101' });
+    .findOne({ id: id });
+}
+
+async function getAllMovies(request) {
+  return await client
+    .db('guvi-db')
+    .collection('movies')
+    .find(request.query) //mongodb filter
+    .toArray();
+}
