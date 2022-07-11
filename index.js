@@ -1,12 +1,14 @@
 import express from 'express'; //importing 3rd party package
 import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
+dotenv.config(); //should be at top
 
 // const express = require('express');//3rd party package
 // const { MongoClient } = require('mongodb');
 const app = express();
 
-const PORT = 4000;
-
+// const PORT = 4000;
+const PORT = process.env.PORT;
 // const movies = [
 //   {
 //     id: '100',
@@ -96,8 +98,6 @@ app.use(express.json());
 // const MONGO_URL="mongodb://localhost";//nodejs version 16
 // const MONGO_URL = 'mongodb://127.0.0.1';
 
-import dotenv from 'dotenv';
-dotenv.config();
 console.log(process.env.MONGO_URL); //see url in console now put in MONGO_URL value instead of empty string
 
 const MONGO_URL = process.env.MONGO_URL; //connection string deleted put empty string it it's place
