@@ -1,3 +1,4 @@
+import { ObjectID } from 'bson';
 import { client } from '../index.js';
 
 export async function createMovies(data) {
@@ -7,21 +8,23 @@ export async function updateMovieById(id, data) {
   return await client
     .db('guvi-db')
     .collection('movies')
-    .updateOne({ id: id }, { $set: data });
+    .updateOne({ _id: ObjectID(id) }, { $set: data });
 }
 export async function deleteMovieById(id) {
   return await client
     .db('guvi-db')
     .collection('movies')
     // .deleteOne({ id: '101' });
-    .deleteOne({ id: id });
+    .deleteOne({ _id: ObjectID(id) });
 }
 export async function getMovieById(id) {
+  console.log('the id is', id);
+
   return await client
     .db('guvi-db')
     .collection('movies')
     // .findOne({ id: '101' });
-    .findOne({ id: id });
+    .findOne({ _id: ObjectID(id) });
 }
 export async function getAllMovies(request) {
   return await client
