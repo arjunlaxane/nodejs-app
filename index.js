@@ -5,13 +5,16 @@ import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
 
 import { moviesRouter } from './routes/movies.js';
+
+import cors from 'cors';
+
 dotenv.config(); //should be at top
 
 // const express = require('express');//3rd party package
 // const { MongoClient } = require('mongodb');
 
 const app = express();
-
+app.use(cors());
 // const PORT = 4000;
 const PORT = process.env.PORT;
 
