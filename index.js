@@ -8,6 +8,8 @@ import { moviesRouter } from './routes/movies.js';
 
 import cors from 'cors';
 
+import { usersRouter } from './routes/users.js';
+
 dotenv.config(); //should be at top
 
 // const express = require('express');//3rd party package
@@ -127,6 +129,9 @@ app.get('/', function (request, response) {
 }); //this is our first api
 
 app.use('/movies', moviesRouter);
+
+//for users
+app.use('/users', usersRouter);
 
 app.listen(PORT, () => console.log(`App started in ${PORT}`));
 
