@@ -2,7 +2,7 @@ import { ObjectID } from 'bson';
 import { client } from '../index.js';
 
 export async function createMovies(data) {
-  return await client.db('guvi-db').collection('movies').insertMany(data);
+  return await client.db('guvi-db').collection('movies').insertOne(data);
 }
 
 export async function createUser(data) {
