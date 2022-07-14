@@ -13,7 +13,7 @@ import { auth } from './middleware/auth.js';
 //movies api's
 
 //all movies
-router.get('/', auth, async function (request, response) {
+router.get('/', async function (request, response) {
   //db.movies.find({})
 
   if (request.query.rating) {
