@@ -3,7 +3,11 @@ import { createUser, getUserByName } from './helper.js';
 
 import bcrypt from 'bcrypt';
 
+import jwt from 'jsonwebtoken';
+
 const router = express.Router();
+
+// const jwt = require('jsonwebtoken');
 
 //hashing password
 
@@ -69,7 +73,9 @@ router.post('/login', async function (request, response) {
 
     //401-unauthenticated
     if (isPasswordMatch) {
-      response.send({ message: 'Successful login' });
+      const token = jwt.sign({ id: useFromDB._id }, process.env.SECRET_KEY);
+
+      response.send({ message: 'Successful login', token: token });
     } else {
       response.status(401).send({ message: 'Invalid credential' });
     }
