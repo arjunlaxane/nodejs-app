@@ -64,7 +64,7 @@ router.post('/login', async function (request, response) {
   if (!useFromDB) {
     response.status(401).send({ message: 'Invalid credential' });
   } else {
-    //check password
+    //check password.
     const storedPassword = useFromDB.password;
     //here stored passwrd should match with destructured password but this will not happen as hash value is always different.
     //here we will use bcrypt to sort this matter out
